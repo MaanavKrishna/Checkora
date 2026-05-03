@@ -905,17 +905,20 @@
                     updateMoves(data.move_history);
                     updateCaptured(data.captured_pieces);
                     syncPieces();
-                    renderClocks(); 
-                    startTimer();
+                    renderClocks();
 
-                    // Check for game-ending conditions
+                    // Check for game-ending conditions before starting timer
                     if (data.game_status === 'checkmate') {
                         handleGameOver('checkmate', turn);
                         return;
                     } else if (data.game_status === 'stalemate') {
                         handleGameOver('stalemate', turn);
                         return;
-                    } else if (data.game_status === 'check') {
+                    }
+
+                    startTimer();
+
+                    if (data.game_status === 'check') {
                         showStatus(turn === 'white' ? 'White is in check!' : 'Black is in check!', true);
                     } else {
                         showStatus('', false);
@@ -957,16 +960,19 @@
                     updateCaptured(data.captured_pieces);
                     syncPieces();
                     renderClocks();
-                    startTimer();
 
-                    // Check for game-ending conditions
+                    // Check for game-ending conditions before starting timer
                     if (data.game_status === 'checkmate') {
                         handleGameOver('checkmate', turn);
                         return;
                     } else if (data.game_status === 'stalemate') {
                         handleGameOver('stalemate', turn);
                         return;
-                    } else if (data.game_status === 'check') {
+                    }
+
+                    startTimer();
+
+                    if (data.game_status === 'check') {
                         showStatus('You are in check!', true);
                     } else {
                         showStatus('Your turn.', false);
@@ -1096,7 +1102,7 @@
         function startTimer() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (paused) return;
+                if (paused || gameOver) return;
                 if (turn==='white' && whiteTime>0) whiteTime--;
                 if (turn==='black' && blackTime>0) blackTime--;
                 renderClocks();
